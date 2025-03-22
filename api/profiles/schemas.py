@@ -54,8 +54,7 @@ class ProfileUpdatePartial(BaseModel):
 class SelectionParameter(BaseModel):
     parties: list[str]
     profiles_count: int
-    min_yacount: int 
-    max_yacount: int 
+    
     min_len_folder: int 
     max_len_folder: int 
     min_age: int  #hours

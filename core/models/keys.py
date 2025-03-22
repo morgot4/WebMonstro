@@ -4,7 +4,8 @@ from sqlalchemy import text
 from .base import Base
 
 
-class KeysOrm(Base):
-    __tablename__ = "info_keys"
+class VideoKeywordsOrm(Base):
+    __tablename__ = "video_keys"
 
     text: Mapped[str] = mapped_column(nullable=True)
+    frequency: Mapped[int]
