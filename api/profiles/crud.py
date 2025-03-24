@@ -6,6 +6,7 @@ from fastapi import Depends
 from core.models.profiles import ProfilesOrm
 from core.models import db_helper
 import datetime
+from api.utils.date_tools import add_remove_hours_with_tz, hours_to_datetime_with_tz
 
 async def get_profile_by_pid(pid: int, session: AsyncSession):
     return await session.get(ProfilesOrm, pid)
@@ -31,9 +32,12 @@ async def update_profile(profile: ProfilesOrm, session: AsyncSession, profile_up
 async def setup_profiles_by_parameters(session: AsyncSession, parties: list[str], new_party, profiles_count, min_len_folder, max_len_folder, min_age, max_age):
     party_fraction = profiles_count // len(parties)
     for party in parties:
-        query = select(ProfilesOrm).where(ProfilesOrm.party == party).filter(and_(ProfilesOrm.data_create >= datetime.datetime.now(datetime.timezone.utc) - min_age, ProfilesOrm.data_create <= datetime.datetime.now(datetime.timezone.utc) - max_age)).limit(party_fraction)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        min_date = add_remove_hours_with_tz(now, min_age, remove=True)
+        max_date = add_remove_hours_with_tz(now, max_age, remove=True)
+        print(min_date, max_date)
+        query = select(ProfilesOrm).where(ProfilesOrm.party == party).where(ProfilesOrm.warm.between(min_date, max_date)).limit(party_fraction)
         res = await session.execute(query)
         for profile in res.scalars().all():
-            if len(profile.folder.split(",")):
-                pass
+            print(print(profile.folder, profile.warm))
         
