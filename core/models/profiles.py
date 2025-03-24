@@ -2,13 +2,13 @@ from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, declared_attr
 from typing import Annotated
 from sqlalchemy import String
 
-from .base import Base, created_at, updated_at
+from .base import Base, created_at, updated_at, idpk
 import datetime
 
 
 class ProfilesOrm(Base):
     __tablename__ = "profiles"
-    pid: Mapped[int]  = mapped_column(autoincrement=True)
+    pid: Mapped[int] = mapped_column(primary_key=True)
     data_create: Mapped[created_at]	
     party: Mapped[str] = mapped_column(String(40), server_default=None)	
     cookies_len: Mapped[int] = mapped_column(server_default=None)	
@@ -17,7 +17,6 @@ class ProfilesOrm(Base):
     is_yandex: Mapped[bool]	= mapped_column(server_default='f')
     is_mail: Mapped[bool] = mapped_column(server_default='f')
     is_youtube: Mapped[bool] = mapped_column(server_default='f')
-    is_avito: Mapped[bool]	= mapped_column(server_default='f')	
     ismobiledevice: Mapped[bool]	= mapped_column(server_default='f')	
     platform: Mapped[str] = mapped_column(String(40), server_default=None)		
     platform_version: Mapped[str] = mapped_column(String(40), server_default=None)		

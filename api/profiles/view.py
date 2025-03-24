@@ -9,11 +9,11 @@ from .crud import *
 router = APIRouter(prefix="/profiles", tags=["Profiles"])
 
 
-@router.get("/{pid}", response_model=list[ProfileRead])
-async def get_profile_by_pid(results: list[ProfileRead] = Depends(profile_by_pid)) -> list[ProfileRead]:
-    return results
+@router.get("/{pid}", response_model=ProfileRead)
+async def get_profile_by_pid(result: ProfileRead = Depends(profile_by_pid)) -> ProfileRead:
+    return result
 
-@router.get("/{party}", response_model=[ProfileRead])
+@router.get("/{party}", response_model=list[ProfileRead])
 async def get_profiles_by_party(results: list[ProfileRead] = Depends(profiles_by_party)) -> list[ProfileRead]:
     return results
 

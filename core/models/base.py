@@ -19,6 +19,6 @@ updated_at = Annotated[
 
 class Base(DeclarativeBase):
     __abstract__ = True
-    id: Mapped[idpk]
+
 
 

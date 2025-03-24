@@ -8,7 +8,7 @@ from core.models import db_helper
 import datetime
 
 async def get_profile_by_pid(pid: int, session: AsyncSession):
-    return session.get(ProfilesOrm.pid)
+    return await session.get(ProfilesOrm, pid)
     
 async def get_profiles_by_party(party: str, session: AsyncSession):
     query = select(ProfilesOrm).where(ProfilesOrm.party == party)
@@ -27,10 +27,10 @@ async def update_profile(profile: ProfilesOrm, session: AsyncSession, profile_up
     await session.commit()
     return profile
 
-async def setup_profiles_by_parameters(session: AsyncSession, parties: list[str], profiles_count, min_yacount, max_yacount, min_len_folder, max_len_folder, min_age, max_age):
+async def setup_profiles_by_parameters(session: AsyncSession, parties: list[str], profiles_count, min_len_folder, max_len_folder, min_age, max_age):
     party_fraction = profiles_count // len(parties)
     for party in parties:
-        query = select(ProfilesOrm).where(ProfilesOrm.party == party).filter(and_(ProfilesOrm.yacount >= min_yacount, ProfilesOrm.yacount <= max_yacount)).filter(and_(min(len(ProfilesOrm.folder.split(",")), 1) >= min_len_folder, min(len(ProfilesOrm.folder.split(",")), 1) <= max_len_folder)).filter(and_(ProfilesOrm.data_create >= datetime.datetime.now(datetime.timezone.utc) - min_age, ProfilesOrm.data_create <= datetime.datetime.now(datetime.timezone.utc) - max_age)).limit(party_fraction)
+        query = select(ProfilesOrm).where(ProfilesOrm.party == party).filter(and_(min(len(ProfilesOrm.folder.split(",")), 1) >= min_len_folder, min(len(ProfilesOrm.folder.split(",")), 1) <= max_len_folder)).filter(and_(ProfilesOrm.data_create >= datetime.datetime.now(datetime.timezone.utc) - min_age, ProfilesOrm.data_create <= datetime.datetime.now(datetime.timezone.utc) - max_age)).limit(party_fraction)
         res = await session.execute(query).scalars().all()
         print(res)
         

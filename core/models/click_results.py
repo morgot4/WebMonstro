@@ -1,13 +1,13 @@
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, declared_attr
 from typing import Annotated
 from sqlalchemy import text, ForeignKey
-from .base import Base
+from .base import Base, idpk
 import datetime
 
 
 class ClickResultsOrm(Base):
     __tablename__ = "results"
-
+    id: Mapped[idpk]
     find: Mapped[bool]
     clickurl: Mapped[bool]
     error: Mapped[bool]

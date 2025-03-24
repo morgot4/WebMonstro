@@ -13,7 +13,6 @@ class ProfileRead(BaseModel):
     is_yandex: bool
     is_mail: bool
     is_youtube: bool
-    is_avito: bool
     ismobiledevice: bool	
     platform: str		
     platform_version: str		
@@ -54,7 +53,6 @@ class ProfileUpdatePartial(BaseModel):
 class SelectionParameter(BaseModel):
     parties: list[str]
     profiles_count: int
-    
     min_len_folder: int 
     max_len_folder: int 
     min_age: int  #hours
