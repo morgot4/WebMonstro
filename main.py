@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.utils.keys import setup_keys
 from api import monstro as monstro_router
 
 app = FastAPI()
@@ -22,12 +21,6 @@ app.add_middleware(
 async def root(name):
     return f"Hello, {name}"
 
-
-@app.get("/setup/keys")
-async def root():
-    with open("data\\all_keys.txt") as f:
-        data = f.read().split("\n")[:-1]
-    await setup_keys(data=data)
 
 
 @app.get("/")

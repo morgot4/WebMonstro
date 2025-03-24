@@ -6,10 +6,10 @@ import datetime
 
 idpk = Annotated[int, mapped_column(primary_key=True)]
 created_at = Annotated[
-    TIMESTAMP(timezone=True), mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"))
 ]
 updated_at = Annotated[
-    TIMESTAMP(timezone=True),
+    datetime.datetime,
     mapped_column(
         server_default=text("TIMEZONE('utc', now())"),
         onupdate=datetime.datetime.now(datetime.timezone.utc),
@@ -20,3 +20,5 @@ updated_at = Annotated[
 class Base(DeclarativeBase):
     __abstract__ = True
     id: Mapped[idpk]
+
+
