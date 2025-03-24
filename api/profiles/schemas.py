@@ -6,36 +6,36 @@ import datetime
 class ProfileRead(BaseModel):
     pid: int
     data_create: datetime.datetime
-    party: str	
-    cookies_len: int	
-    accounts: str	
+    party: str | None	
+    cookies_len: int | None	
+    accounts: str | None	
     is_google: bool
     is_yandex: bool
     is_mail: bool
     is_youtube: bool
     ismobiledevice: bool	
-    platform: str		
-    platform_version: str		
-    browser: str		
-    browser_version: str	
-    folder: str		
-    fingerprints: str	
-    cookies: str		
-    localstorage: str		
-    proxy: str
-    last_date_work: datetime.datetime
-    date_block: datetime.datetime
-    last_visit_sites: str
-    last_task: str
-    geo: str
-    tel: str
-    email: str
-    name: str
-    mouse_config: str	
+    platform: str | None		
+    platform_version: str | None		
+    browser: str | None		
+    browser_version: str | None	
+    folder: str | None		
+    fingerprints: str | None	
+    cookies: str | None		
+    localstorage: str | None		
+    proxy: str | None
+    last_date_work: datetime.datetime | None
+    date_block: datetime.datetime | None
+    last_visit_sites: str | None
+    last_task: str | None
+    geo: str | None 
+    tel: str | None 
+    email: str | None 
+    name: str | None
+    mouse_config: str | None	
     domaincount: int
     metrikacount: int
-    yacount: int
-    warm: datetime.datetime
+    yacount: int | None
+    warm: datetime.datetime | None
 
 
 class ProfileUpdatePartial(BaseModel):
