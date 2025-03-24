@@ -33,7 +33,7 @@ class ProfileRead(BaseModel):
     name: str | None
     mouse_config: str | None	
     domaincount: int
-    metrikacount: int
+    metrikacount: int | None
     yacount: int | None
     warm: datetime.datetime | None
 
@@ -52,6 +52,7 @@ class ProfileUpdatePartial(BaseModel):
     
 class SelectionParameter(BaseModel):
     parties: list[str]
+    new_party: str
     profiles_count: int
     min_len_folder: int 
     max_len_folder: int 

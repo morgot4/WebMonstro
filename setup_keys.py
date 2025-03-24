@@ -20,7 +20,7 @@ engine = create_engine(conn_string)
 # Названия колонок в таблице
 col1_name = "text"  # замените на имя первой колонки в вашей таблице
 col2_name = "frequency"  # замените на имя второй колонки в вашей таблице
-fraction = 1/7
+fraction = 1 / 7
 
 # Параметры загрузки
 filepath = 'C:\\Users\\Administrator\\Downloads\\keywords225.tsv'  # путь к вашему TSV файлу
@@ -39,8 +39,8 @@ def insert_chunk(conn, df, table):
     # Вставляем данные из временной таблицы в целевую таблицу
     
     conn.execute(text(f"""
-    INSERT INTO {table} (id, {col1_name}, {col2_name})
-    SELECT "0", "1", "2" FROM {temp_table}
+    INSERT INTO {table} ({col1_name}, {col2_name})
+    SELECT "0", "1" FROM {temp_table}
     ON CONFLICT DO NOTHING
     """))
     conn.execute(text(f"DROP TABLE {temp_table}"))
@@ -54,9 +54,8 @@ try:
         # Создаем таблицу, если она не существует
         conn.execute(text(f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
-            id SERIAL PRIMARY KEY,
             {col1_name} TEXT,
-            {col2_name} INT
+            {col2_name} BIGINT
         )
         """))
         
