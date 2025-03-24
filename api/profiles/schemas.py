@@ -52,6 +52,7 @@ class ProfileUpdatePartial(BaseModel):
     
 class SelectionParameter(BaseModel):
     parties: list[str]
+    new_party: str
     profiles_count: int
     min_len_folder: int 
     max_len_folder: int 
