@@ -4,6 +4,7 @@ from core.models import db_helper
 from sqlalchemy.ext.asyncio import AsyncSession
 from .crud import *
 
+
 router = APIRouter(prefix="/keywords", tags=["Keywords"])
 
 

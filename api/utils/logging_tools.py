@@ -38,7 +38,32 @@ class ElasticsearchHandler(logging.Handler):
                 'timestamp': datetime.datetime.now(datetime.timezone.utc),
                 'level': record.levelname,
                 'message': record.getMessage(),
-                'module': record.module
+                'module': record.module,
+                "function": record.funcName,
+                "line": record.lineno,
+                "trace": None
             }
+            if record.exc_info:
+                log_entry['trace'] = self.formatter.formatException(
+                    record.exc_info
+                )
+
+            self.es.index(
+                index=self.index_name,
+                document=log_entry
+            )
         except Exception as e:
             print(e)
+
+
+#Использование
+
+es_handler = ElasticsearchHandler(
+    host="localhost",
+    index_name="my-app-logs"
+)
+
+es_handler.setFormatter(ColoredFormatter())
+
+logger = logging.getLogger("my_app")
+logger.addHandler(es_handler)
