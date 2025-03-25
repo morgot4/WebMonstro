@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.orm import sessionmaker
 from core.config import settings
 from asyncio import current_task
+import clickhouse_driver
 
 
 class DatabaseHelper:
@@ -33,6 +34,24 @@ class DatabaseHelper:
         session = self.get_scoped_session()
         yield session
         await session.close()
+
+
+class ClickHouseHelper:
+    def __init__(self, host, username, password):
+        self.client = clickhouse_driver.Client(host=host, user=username, password=password, secure=True, verify=True)
+
+    def setup_keys(self):
+        self.client.execute(
+            """CREATE TABLE IF NOT EXIST keys (
+                id UInt32,
+                text String,
+                frequency UInt32,
+                words_count UInt8
+            ) ENGINE = MergeTree()
+            ORDER BY (words_count, id)
+            """
+        )
+        
 
 
 db_helper = DatabaseHelper(url=settings.DATABASE_URL_asyncpg, echo=False)

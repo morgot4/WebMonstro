@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api import monstro as monstro_router
+import logging
+from api.utils.logging_tools import SensitiveDataFilter, ColoredFormatter
+from api.utils.setup_logging import setup_logging
 
 app = FastAPI()
 app.include_router(router=monstro_router)
@@ -16,6 +19,13 @@ app.add_middleware(
 
 # https://redirect.processfinger.com/lk/monstro_api.php?password=FL79HgVg220930
 
+setup_logging()
+
+logger = logging.getLogger('my_app')
+
+logger.debug("Debug message")
+logger.info("Info message")
+logger.error("Error message")
 
 @app.get("/{name}")
 async def root(name):
@@ -30,5 +40,6 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-
+    logger.info(f"Start the application")
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+   
