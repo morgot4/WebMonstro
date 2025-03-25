@@ -35,9 +35,9 @@ async def setup_profiles_by_parameters(session: AsyncSession, parties: list[str]
         now = datetime.datetime.now(datetime.timezone.utc)
         min_date = add_remove_hours_with_tz(now, min_age, remove=True)
         max_date = add_remove_hours_with_tz(now, max_age, remove=True)
-        print(min_date, max_date)
+        print(type(min_date), type(max_date))
         query = select(ProfilesOrm).where(ProfilesOrm.party == party).where(ProfilesOrm.warm.between(min_date, max_date)).limit(party_fraction)
         res = await session.execute(query)
         for profile in res.scalars().all():
-            print(print(profile.folder, profile.warm))
+            print(profile.folder, profile.warm)
         

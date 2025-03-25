@@ -11,3 +11,9 @@ router = APIRouter(prefix="/keywords", tags=["Keywords"])
 async def rand_video_keyword(session: AsyncSession = Depends(db_helper.session_dependency)):
     res = await get_random_video_keyword(session=session)
     return HTMLResponse(res.text)
+
+
+@router.get("/default")
+async def rand_video_keyword(min: int = 1, max: int = 5, session: AsyncSession = Depends(db_helper.session_dependency)):
+    res = await get_random_keyword(min, max, session=session)
+    return HTMLResponse(res.text)

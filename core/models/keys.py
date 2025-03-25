@@ -9,3 +9,11 @@ class VideoKeywordsOrm(Base):
     id: Mapped[idpk]
     text: Mapped[str] = mapped_column(nullable=True)
     frequency: Mapped[int]
+
+
+class KeywordsOrm(Base):
+    __tablename__ = "keys"
+    id: Mapped[idpk]
+    text: Mapped[str] = mapped_column(nullable=True)
+    frequency: Mapped[int]
+    words_count: Mapped[int]
