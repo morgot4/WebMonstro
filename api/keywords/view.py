@@ -15,6 +15,6 @@ async def rand_video_keyword(session: AsyncSession = Depends(db_helper.session_d
 
 
 @router.get("/default")
-async def rand_video_keyword(min: int = 1, max: int = 5, session: AsyncSession = Depends(db_helper.session_dependency)):
-    res = await get_random_keyword(min, max, session=session)
-    return HTMLResponse(res.text)
+async def rand_video_keyword(pid, min: int = 4, max: int = 7):
+    res = await get_random_keyword(pid, min, max)
+    return HTMLResponse(res)

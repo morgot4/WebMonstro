@@ -58,12 +58,12 @@ class ElasticsearchHandler(logging.Handler):
 
 #Использование
 
-es_handler = ElasticsearchHandler(
-    host="localhost",
-    index_name="my-app-logs"
-)
+# es_handler = ElasticsearchHandler(
+#     host="localhost",
+#     index_name="my-app-logs"
+# )
 
-es_handler.setFormatter(ColoredFormatter())
+# es_handler.setFormatter(ColoredFormatter())
 
-logger = logging.getLogger("my_app")
-logger.addHandler(es_handler)
+# logger = logging.getLogger("my_app")
+# logger.addHandler(es_handler)

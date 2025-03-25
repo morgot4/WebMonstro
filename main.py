@@ -23,9 +23,6 @@ setup_logging()
 
 logger = logging.getLogger('my_app')
 
-logger.debug("Debug message")
-logger.info("Info message")
-logger.error("Error message")
 
 @app.get("/{name}")
 async def root(name):
