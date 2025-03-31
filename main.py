@@ -1,38 +1,104 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from api import monstro as monstro_router
-import logging
-from api.utils.logging_tools import SensitiveDataFilter, ColoredFormatter
+from contextlib import asynccontextmanager
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from typing import AsyncGenerator
 from api.utils.setup_logging import setup_logging
+from api.profiles.utils import check_working_party_for_append, from_working_parties_to_trash_party
 
-app = FastAPI()
-app.include_router(router=monstro_router)
-origins = ["*"]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+logger = setup_logging()
+scheduler = AsyncIOScheduler()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[dict, None]:
+    global logger
+    """
+    Управляет жизненным циклом планировщика приложения.
+
+    Args:
+        app (FastAPI): Экземпляр приложения FastAPI.
+    """
+    
+    logger.info("Инициализация приложения...")
+    try:
+        scheduler.add_job(
+            check_working_party_for_append,
+            trigger=IntervalTrigger(minutes=1),
+            id='currency_update_parties',
+            replace_existing=True
+        )
+
+        scheduler.add_job(
+            from_working_parties_to_trash_party,
+            trigger=IntervalTrigger(minutes=1),
+            id="currency_clear_s_mix",
+            replace_existing=True
+        )
+        scheduler.start()
+        logger.info("Планировщик обновления ")
+        yield
+    except Exception as e:
+        logger.error(f"Ошибка инициализации планировщика: {e}")
+    finally:
+        # Завершение работы планировщика
+        scheduler.shutdown()
+        logger.info("Планировщик обновления курсов валют остановлен")
+    
+    logger.info("Завершение работы приложения...")
+
+def create_app() -> FastAPI:
+    """
+   Создание и конфигурация FastAPI приложения.
+
+   Returns:
+       Сконфигурированное приложение FastAPI
+   """
+    app = FastAPI(
+        title="Стартовая сборка FastAPI",
+        description=(
+            "Стартовая сборка с интегрированной SQLAlchemy 2 для разработки FastAPI приложений с продвинутой "
+            "архитектурой\n\n"
+        ),
+        version="1.0.0",
+        lifespan=lifespan,
+    )
+
+    # Настройка CORS
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
+
+    # Регистрация роутеров
+    register_routers(app)
+
+    return app
 
 
-# https://redirect.processfinger.com/lk/monstro_api.php?password=FL79HgVg220930
+def register_routers(app: FastAPI) -> None:
+    """Регистрация роутеров приложения."""
+    # Корневой роутер
+    root_router = APIRouter()
 
-setup_logging()
+    @root_router.get("/", tags=["root"])
+    def home_page():
+        return {
+            "message": "",
+        }
 
-logger = logging.getLogger('my_app')
+    # Подключение роутеров
+    app.include_router(root_router, tags=["root"])
+    #app.include_router(router_auth, prefix='/auth', tags=['Auth'])
+    app.include_router(router=monstro_router)
 
 
-@app.get("/{name}")
-async def root(name):
-    return f"Hello, {name}"
-
-
-
-@app.get("/")
-async def root():
-    return f"This is test api for control Monstro projects"
+# Создание экземпляра приложения
+app = create_app()
 
 
 if __name__ == "__main__":

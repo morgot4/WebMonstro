@@ -133,6 +133,6 @@ class DatabaseHelper:
 
 
 
-db_helper = DatabaseHelper(url=settings.DATABASE_URL_asyncpg, echo=False)
-clickhouse_helper =  AsyncClickHouse(host=settings.CLICKHOUSE_HOST, user=settings.CLICKHOUSE_USERNAME, password=settings.CLICKHOUSE_PASSWORD)
-keywords_pool = RandomTextPool(host=settings.CLICKHOUSE_HOST, user=settings.CLICKHOUSE_USERNAME, password=settings.CLICKHOUSE_PASSWORD)
+db_helper = DatabaseHelper(url=settings.db.DATABASE_URL_asyncpg, echo=False)
+clickhouse_helper =  AsyncClickHouse(host=settings.db.CLICKHOUSE_HOST, user=settings.db.CLICKHOUSE_USERNAME, password=settings.db.CLICKHOUSE_PASSWORD)
+keywords_pool = RandomTextPool(host=settings.db.CLICKHOUSE_HOST, user=settings.db.CLICKHOUSE_USERNAME, password=settings.db.CLICKHOUSE_PASSWORD)

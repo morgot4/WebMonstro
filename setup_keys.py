@@ -201,3 +201,23 @@ load_to_clickhouse(
 )
 
 
+
+async def from_s_mix():
+    async with db_helper.session_factory() as session:
+        query = select(func.count()).select_from(ProfilesOrm).where(ProfilesOrm.party == "s_mix")
+        res = await session.execute(query)
+        profiles_count = res.scalar()
+        logger.info(f"Get s_mix capacity: {profiles_count}")
+        if profiles_count > 0:
+
+            query = select(ProfilesOrm.pid, ProfilesOrm.folder).where(
+                        ProfilesOrm.folder.like("1,%"),
+ 
+                    )
+            res = await session.execute(query)
+            parties = res.scalars().all()
+            print(res)
+            # if len(parties) != 0:
+            #     party_fraction = shortage // len(parties)
+            #     if party_fraction != 0:
+            #         await servers_parties_to_s_mix(session=session, party_fraction=party_fraction, parties=parties, min_hours_life=MIN_HOURS, max_hours_life=MAX_HOURS)

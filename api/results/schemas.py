@@ -17,5 +17,6 @@ class ClickResult(BaseModel):
     domain: str
     party: str
     keyword: str
+    url: str
     lendomain: int
     lencookies: int

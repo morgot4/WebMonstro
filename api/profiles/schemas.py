@@ -54,7 +54,5 @@ class SelectionParameter(BaseModel):
     parties: list[str]
     new_party: str
     profiles_count: int
-    min_len_folder: int 
-    max_len_folder: int 
-    min_age: int  #hours
-    max_age: int #hours
+    min_hours_life: int  #hours
+    max_hours_life: int #hours

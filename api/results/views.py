@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/results", tags=["Results"])
 
-@router.get("/upload")
+@router.get("/upload/", response_model=ClickResult)
 async def get_info_from_monstro(click_result = Depends(generate_click_result), session: AsyncSession = Depends(db_helper.session_dependency)):
-   pass
+   return click_result
 
    
 

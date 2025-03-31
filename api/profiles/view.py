@@ -6,7 +6,10 @@ from core.models import db_helper
 from sqlalchemy.ext.asyncio import AsyncSession
 from .crud import *
 
+
+
 router = APIRouter(prefix="/profiles", tags=["Profiles"])
+
 
 
 @router.get("/pid/{pid}", response_model=ProfileRead)
@@ -19,4 +22,5 @@ async def get_profiles_by_party(results: list[ProfileRead] = Depends(profiles_by
 
 @router.post("/selection")
 async def profiles_selection(select_model: SelectionParameter, session: AsyncSession = Depends(db_helper.session_dependency)):
-    await setup_profiles_by_parameters(session=session, **select_model.model_dump())
+    count = await setup_profiles_by_parameters(session=session, **select_model.model_dump())
+    return {"success": True, "count": count}
