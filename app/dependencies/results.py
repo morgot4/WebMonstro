@@ -1,0 +1,43 @@
+from app.results.schemas import ClickResult
+
+
+async def generate_click_result(
+    find,
+    clickurl,
+    error,
+    pos,
+    copyname,
+    profileid,
+    data_create,
+    yacount,
+    metrikacount,
+    search_type,
+    search_domain,
+    domain,
+    party,
+    ask,
+    fullask,
+    lendomain,
+    lencookies,
+    url: str | None = None,
+):
+    return ClickResult(
+        find=find,
+        clickurl=clickurl,
+        error=error,
+        pos=pos,
+        copyname=copyname,
+        profile_id=profileid,
+        data_create=data_create,
+        yacount=yacount,
+        metrikacount=metrikacount,
+        search_type=search_type,
+        search_domain=search_domain,
+        domain=domain,
+        party=party,
+        keyword=ask,
+        fullask=fullask,
+        url=url,
+        lendomain=lendomain,
+        lencookies=lencookies,
+    )
