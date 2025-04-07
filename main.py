@@ -1,15 +1,12 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from app import monstro as monstro_router
+from app import main
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from app.utils.setup_logging import setup_logging
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
-from app.profiles.sheduler import update_working_party_schedule, clean_working_party_schedule, clean_all_parties_overtime_schedule, delete_trash_and_overtime
 
 logger = setup_logging()
-scheduler = AsyncIOScheduler()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[dict, None]:
@@ -22,43 +19,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[dict, None]:
     """
     
     logger.info("Инициализация приложения...")
-    try:
-        scheduler.add_job(
-            update_working_party_schedule,
-            trigger=IntervalTrigger(minutes=1),
-            id='currency_update_working_party',
-            replace_existing=True
-        )
-
-        scheduler.add_job(
-            clean_working_party_schedule,
-            trigger=IntervalTrigger(minutes=1),
-            id="currency_clear_working_party",
-            replace_existing=True
-        )
-        scheduler.add_job(
-            clean_all_parties_overtime_schedule,
-            trigger=IntervalTrigger(seconds=30),
-            id='currency_clear_parties',
-            replace_existing=True
-        )
-
-        scheduler.add_job(
-            delete_trash_and_overtime,
-            trigger=IntervalTrigger(seconds=30),
-            id="currency_delete_parties",
-            replace_existing=True
-        )
-        scheduler.start()
-        logger.info("Планировщик обновления ")
-        yield
-    except Exception as e:
-        logger.error(f"Ошибка инициализации планировщика: {e}")
-    finally:
-        # Завершение работы планировщика
-        scheduler.shutdown()
-        logger.info("Планировщик обновления курсов валют остановлен")
-    
+    yield
     logger.info("Завершение работы приложения...")
 
 def create_app() -> FastAPI:
@@ -107,7 +68,7 @@ def register_routers(app: FastAPI) -> None:
     # Подключение роутеров
     app.include_router(root_router, tags=["root"])
     #app.include_router(router_auth, prefix='/auth', tags=['Auth'])
-    app.include_router(router=monstro_router)
+    app.include_router(router=main)
 
 
 # Создание экземпляра приложения
@@ -117,5 +78,5 @@ app = create_app()
 if __name__ == "__main__":
     import uvicorn
     logger.info(f"Start the application")
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, workers=3)
    

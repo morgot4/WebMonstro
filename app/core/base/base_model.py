@@ -32,13 +32,13 @@ updated_at = Annotated[
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 
-    pid: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    # created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
-    # updated_at: Mapped[datetime] = mapped_column(
-    #     TIMESTAMP,
-    #     server_default=func.now(),
-    #     onupdate=func.now()
-    # )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(TIMESTAMP, server_default=func.now())
+    updated_at: Mapped[datetime.date] = mapped_column(
+        TIMESTAMP,
+        server_default=func.now(),
+        onupdate=func.now()
+    )
 
     @declared_attr
     def __tablename__(cls) -> str:
